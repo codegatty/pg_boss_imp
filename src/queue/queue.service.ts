@@ -1,7 +1,7 @@
-import { Injectable,Inject,OnModuleInit } from '@nestjs/common';
-import { create } from 'domain';
+import { Injectable,OnModuleInit } from '@nestjs/common';
 import PgBoss from 'pg-boss';
 import { NewEquipment } from './NewEquipment.dto';
+import { error } from 'console';
 
 @Injectable()
 export class QueueService extends PgBoss implements OnModuleInit{
@@ -14,7 +14,13 @@ export class QueueService extends PgBoss implements OnModuleInit{
     async onModuleInit() {
     this.on('error', console.error);
     try{
+
         await this.start();
+        const installed = await this.isInstalled() //check for the configuration in postgresql
+        
+        if(!installed){
+            throw error('Pg-boss not been configured in database level')
+        }
         this.newQueue(this.heavyQueue);
         this.newQueue(this.lightQueue);
         
