@@ -1,6 +1,7 @@
-import { Body, Controller,Post,Get } from '@nestjs/common';
+import { Body, Controller,Post,Get, Query, Param } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { NewEquipment } from './NewEquipment.dto';
+import { RearrangeData } from './RearrangeData.dto';
 
 @Controller('queue')
 export class QueueController {
@@ -17,5 +18,18 @@ export class QueueController {
         return this.queueService.getQueueItem('HeavyQueue');
     }
 
+    @Get('all')
+    getQueueData(){
+        return this.queueService.getQueueData('HeavyQueue')
+    }
 
+    @Get('sort')
+    sortQueueData(){
+        return this.queueService.getQueueData('HeavyQueue')
+    }
+
+    @Post('rearrange')
+    rearrangeQueueData(@Body()data:Array<RearrangeData>){
+        return this.queueService.rearrangeQueueData('HeavyQueue',data);
+    }
 }
